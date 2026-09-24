@@ -10,6 +10,7 @@ module.exports = async function handler(request, response) {
     return app(request, response);
   } catch (error) {
     databaseConnection = undefined;
+    console.error("Database connection failed:", error.message);
     response.statusCode = 500;
     return response.json({
       error: {
