@@ -30,3 +30,6 @@ coverage/
 # Build output
 dist/
 build/
+
+# Vercel
+.vercel/
