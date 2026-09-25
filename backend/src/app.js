@@ -5,11 +5,14 @@ const { connectDatabase } = require("./config/database");
 const menuRoutes = require("./routes/menu");
 const orderRoutes = require("./routes/orders");
 const errorHandler = require("./middleware/errorHandler");
+dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
+const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:3000")
+  .split(",")
+  .map((origin) => origin.trim());
 
-dotenv.config();
-app.use(cors({ origin: process.env.CORS_ORIGIN || "http://localhost:3000" }));
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 app.use("/api/menu", menuRoutes);
 app.use("/api/orders", orderRoutes);
