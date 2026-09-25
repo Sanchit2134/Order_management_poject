@@ -5,7 +5,7 @@ import { useCart } from "../context/CartContext";
 import { checkoutSchema } from "../schemas/checkoutSchema";
 
 export default function CheckoutForm() {
-  const { items } = useCart();
+  const { items, clearCart } = useCart();
   const router = useRouter();
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
@@ -25,6 +25,7 @@ export default function CheckoutForm() {
         })),
         customer,
       });
+      clearCart();
       router.push(`/order/${order._id}`);
     } catch (validationOrRequestError) {
       if (validationOrRequestError.name === "ValidationError") {

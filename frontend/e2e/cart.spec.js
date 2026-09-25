@@ -31,3 +31,24 @@ test("rejects whitespace-only delivery details", async ({ page, mockMenu, burger
   await expect(page.getByText("Address is required", { exact: true })).toBeVisible();
   await expect(page.getByText("Phone is required", { exact: true })).toBeVisible();
 });
+
+test("starts a new cart after placing an order", async ({ page, mockMenu, burger, pizza, placeOrder }) => {
+  await mockMenu([burger, pizza]);
+  await placeOrder();
+  await page.goto("/");
+  await page.getByRole("button", { name: /add to cart/i }).first().click();
+  await page.getByRole("link", { name: /cart/i }).click();
+
+  await page.getByLabel("Name").fill("Ada Lovelace");
+  await page.getByLabel("Address").fill("1 Analytical Engine Way");
+  await page.getByLabel("Phone").fill("1234567890");
+  await page.getByRole("button", { name: /place order/i }).click();
+  await expect(page).toHaveURL(/\/order\/order-1$/);
+
+  await page.getByRole("link", { name: /order another meal/i }).click();
+  await page.getByRole("button", { name: /add to cart/i }).nth(1).click();
+  await page.getByRole("link", { name: /cart/i }).click();
+
+  await expect(page.getByText("Margherita Pizza", { exact: true })).toBeVisible();
+  await expect(page.getByText("Burger", { exact: true })).toHaveCount(0);
+});
